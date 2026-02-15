@@ -15,7 +15,7 @@ const userSchema= new Schema({
         type:String,
         required:true,
         minlength:6,
-        select:false
+        
     },
     bio:{
         type:String,
@@ -46,7 +46,7 @@ const userSchema= new Schema({
         ref:"User"
     }]
 },
-{timeStamps:true})
+{timestamps:true})
 
 //pre Hook
 userSchema.pre("save",async function(next){
@@ -64,6 +64,11 @@ userSchema.pre("save",async function(next){
         next(error)
     }
 })
+
+userSchema.methods.matchPassword = async function (enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
+
 const User=mongoose.model("User",userSchema)
 
 export default User
